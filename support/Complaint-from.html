@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .otp-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Copyright Complaint Form</h1>
+        
+        <form id="complaintForm">
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number *</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" 
+                       placeholder="0771234567 or +94771234567" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address *</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="originalWorkTypes">Original Work Type *</label>
+                <select id="originalWorkTypes" name="originalWorkTypes" required>
+                    <option value="">Select work type</option>
+                    <option value="Photo">Photo</option>
+                    <option value="Video">Video</option>
+                    <option value="Text">Text</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="originalWorkUrl">Original Work URL *</label>
+                <input type="url" id="originalWorkUrl" name="originalWorkUrl" required>
+            </div>
+
+            <div class="form-group">
+                <label>Copyright Work Types *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="photoVideo" name="copyrightWorkTypes" value="Photo_Video_or_Post">
+                        <label for="photoVideo">Photo/Video or Post</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ad" name="copyrightWorkTypes" value="Ad">
+                        <label for="ad">Ad</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="other" name="copyrightWorkTypes" value="Other">
+                        <label for="other">Other</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="copyrightWorkUrl">Copyright Work URL *</label>
+                <input type="url" id="copyrightWorkUrl" name="copyrightWorkUrl" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reportReason">Report Reason *</label>
+                <select id="reportReason" name="reportReason" required>
+                    <option value="">Select reason</option>
+                    <option value="This_content_copies_my_work">This content copies my work</option>
+                    <option value="I_appear_in_this_content">I appear in this content</option>
+                    <option value="This_content_uses_my_name">This content uses my name</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" 
+                          placeholder="Additional details about your complaint"></textarea>
+            </div>
+
+            <div class="otp-section">
+                <h3>Phone Verification</h3>
+                <button type="button" id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+                <div id="otpInputSection" style="display: none;">
+                    <div class="form-group">
+                        <label for="otpCode">Enter OTP Code *</label>
+                        <input type="text" id="otpCode" name="otpCode" maxlength="6" 
+                               placeholder="Enter 6-digit code">
+                    </div>
+                    <button type="button" id="verifyOtpBtn" onclick="verifyOTP()">Verify OTP</button>
+                </div>
+            </div>
+
+            <div id="messageDiv"></div>
+
+            <button type="submit" id="submitBtn" disabled>Submit Complaint</button>
+        </form>
+    </div>
+
+    <script>
+        let isPhoneVerified = false;
+        const API_BASE_URL = 'http://localhost:8080/api/complaints';
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('messageDiv');
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        async function sendOTP() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            
+            if (!phoneNumber) {
+                showMessage('Please enter your phone number', 'error');
+                return;
+            }
+
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/send-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber: phoneNumber })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('OTP sent successfully! Check your phone.', 'success');
+                    document.getElementById('otpInputSection').style.display = 'block';
+                    sendOtpBtn.textContent = 'Resend OTP';
+                } else {
+                    showMessage(data.message || 'Failed to send OTP', 'error');
+                }
+            } catch (error) {
+                showMessage('Error sending OTP: ' + error.message, 'error');
+            } finally {
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = 'Send OTP';
+            }
+        }
+
+        async function verifyOTP() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const otpCode = document.getElementById('otpCode').value;
+            
+            if (!otpCode) {
+                showMessage('Please enter the OTP code', 'error');
+                return;
+            }
+
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.textContent = 'Verifying...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/verify-otp`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        phoneNumber: phoneNumber,
+                        otpCode: otpCode 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('Phone number verified successfully!', 'success');
+                    isPhoneVerified = true;
+                    document.getElementById('submitBtn').disabled = false;
+                    verifyOtpBtn.textContent = 'Verified ✓';
+                    verifyOtpBtn.style.backgroundColor = '#28a745';
+                } else {
+                    showMessage(data.message || 'Invalid OTP code', 'error');
+                    verifyOtpBtn.disabled = false;
+                    verifyOtpBtn.textContent = 'Verify OTP';
+                }
+            } catch (error) {
+                showMessage('Error verifying OTP: ' + error.message, 'error');
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.textContent = 'Verify OTP';
+            }
+        }
+
+        document.getElementById('complaintForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!isPhoneVerified) {
+                showMessage('Please verify your phone number first', 'error');
+                return;
+            }
+
+            const formData = new FormData(this);
+            const copyrightWorkTypes = [];
+            
+            // Get selected copyright work types
+            document.querySelectorAll('input[name="copyrightWorkTypes"]:checked').forEach(checkbox => {
+                copyrightWorkTypes.push(checkbox.value);
+            });
+
+            const complaintData = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                phoneNumber: formData.get('phoneNumber'),
+                address: formData.get('address'),
+                originalWorkTypes: formData.get('originalWorkTypes'),
+                originalWorkUrl: formData.get('originalWorkUrl'),
+                copyrightWorkTypes: copyrightWorkTypes,
+                copyrightWorkUrl: formData.get('copyrightWorkUrl'),
+                reportReason: formData.get('reportReason'),
+                description: formData.get('description'),
+                otpCode: formData.get('otpCode')
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(complaintData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage(`Complaint submitted successfully! Your complaint number is: ${data.complaintNumber}`, 'success');
+                    document.getElementById('complaintForm').reset();
+                    document.getElementById('otpInputSection').style.display = 'none';
+                    isPhoneVerified = false;
+                } else {
+                    showMessage(data.message || 'Failed to submit complaint', 'error');
+                }
+            } catch (error) {
+                showMessage('Error submitting complaint: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Complaint';
+            }
+        });
+    </script>
+</body>
+</html>

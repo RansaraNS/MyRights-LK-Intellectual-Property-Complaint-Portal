@@ -1,8 +1,10 @@
 package com.sasinransara.io.support.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @PropertySource(value = "classpath:application.properties")
@@ -18,19 +20,25 @@ public class EnvironmentConfig {
     @Value("${spring.datasource.password}")
     private String dbPassword;
 
-    // Twilio Configuration
-    @Value("${twilio.account.sid}")
-    private String twilioAccountSid;
-    
-    @Value("${twilio.auth.token}")
-    private String twilioAuthToken;
-    
-    @Value("${twilio.verify.service.sid}")
-    private String twilioVerifyServiceSid;
+    // Notify.lk Configuration
+    @Value("${notify.user.id}")
+    private String notifyUserId;
+
+    @Value("${notify.api.key}")
+    private String notifyApiKey;
+
+    @Value("${notify.sender.id}")
+    private String notifySenderId;
 
     // Server Configuration
     @Value("${server.port}")
     private int serverPort;
+
+    // RestTemplate Bean for HTTP requests
+    @Bean(name = "customRestTemplate")
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
     // Getters
     public String getDbUrl() {
@@ -45,16 +53,16 @@ public class EnvironmentConfig {
         return dbPassword;
     }
 
-    public String getTwilioAccountSid() {
-        return twilioAccountSid;
+    public String getNotifyUserId() {
+        return notifyUserId;
     }
 
-    public String getTwilioAuthToken() {
-        return twilioAuthToken;
+    public String getNotifyApiKey() {
+        return notifyApiKey;
     }
 
-    public String getTwilioVerifyServiceSid() {
-        return twilioVerifyServiceSid;
+    public String getNotifySenderId() {
+        return notifySenderId;
     }
 
     public int getServerPort() {
