@@ -303,7 +303,7 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
                 />
               </div>
               <div>
-                <Input
+                <TextArea
                   label="Original Work URL *"
                   name="originalWorkUrl"
                   value={formData.originalWorkUrl}
@@ -345,7 +345,7 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
             </div>
 
             <div>
-              <Input
+              <TextArea
                 label="Copyright Work URL *"
                 name="copyrightWorkUrl"
                 value={formData.copyrightWorkUrl}

@@ -18,6 +18,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -64,7 +65,7 @@ public class Complaint {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @NotBlank(message = "Original Work Type is required")
+    @NotNull(message = "Original Work Type is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "original_work_type", nullable = false)
     private OriginalWorkType originalWorkTypes;
@@ -73,6 +74,7 @@ public class Complaint {
     @Column(name = "original_work_url", nullable = false)
     private String originalWorkUrl;
 
+    @NotNull(message = "Copyright Work Type is required")
     @ElementCollection(targetClass = CopyrightWorkType.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(
@@ -86,7 +88,7 @@ public class Complaint {
     @Column(name = "copyright_work_url", nullable = false)
     private String copyrightWorkUrl;
 
-    @NotBlank(message = "Report Reason is required")
+    @NotNull(message = "Report Reason is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "report_reason", nullable = false)
     private ReportReason reportReason;
