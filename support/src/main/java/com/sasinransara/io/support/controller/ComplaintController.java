@@ -67,15 +67,13 @@ public class ComplaintController {
             @Valid @RequestBody ComplaintRequest request) {
         try {
             // Verify OTP before submitting complaint
-            boolean isOTPValid = complaintService.verifyOTP(request.getPhoneNumber(), request.getOtpCode());
-            
-            if (!isOTPValid) {
+            if (!complaintService.isPhoneVerified(request.getPhoneNumber())) {
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", false);
-                response.put("message", "Phone number verification failed. Please verify your phone number first.");
-                
+                response.put("message", "Phone number not verified. Please verify your phone number before submitting.");
                 return ResponseEntity.badRequest().body(response);
             }
+
 
             // Create complaint from request
             Complaint complaint = new Complaint();

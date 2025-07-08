@@ -53,7 +53,4 @@ public class ComplaintRequest {
     @Size(max = 1000, message = "Description must be less than 1000 characters")
     private String description;
     
-    @NotBlank(message = "OTP code is required")
-    @Size(min = 4, max = 6, message = "OTP code must be between 4 and 6 digits")
-    private String otpCode;
 }

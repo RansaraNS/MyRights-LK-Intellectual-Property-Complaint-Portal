@@ -2,6 +2,8 @@ package com.sasinransara.io.support.service;
 
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.repository.ComplaintRepository;
+import com.sasinransara.io.support.util.PhoneVerificationStore;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final NotifyLkService notifyLkService;
     private final ReentrantLock complaintNumberLock = new ReentrantLock();
+    private final PhoneVerificationStore phoneVerificationStore;
 
     @Transactional
     public Complaint createComplaint(Complaint complaint) {
@@ -74,18 +77,22 @@ public class ComplaintService {
     public boolean verifyOTP(String phoneNumber, String otpCode) {
         try {
             String formattedPhone = formatPhoneNumber(phoneNumber);
-            
-            // Verify OTP using Notify.lk service
             boolean isValid = notifyLkService.verifyOTP(formattedPhone, otpCode);
-            
-            log.info("OTP verification for phone {}: {}", phoneNumber, isValid ? "SUCCESS" : "FAILED");
-            
+            if (isValid) {
+                phoneVerificationStore.markVerified(formattedPhone); // NEW LINE
+            }
             return isValid;
         } catch (Exception e) {
             log.error("Error verifying OTP for phone number {}: {}", phoneNumber, e.getMessage());
             return false;
         }
     }
+
+    public boolean isPhoneVerified(String phoneNumber) {
+        String formattedPhone = formatPhoneNumber(phoneNumber);
+        return phoneVerificationStore.isVerified(formattedPhone);
+    }
+
 
     @Transactional
     public void markPhoneAsVerified(Long complaintId) {

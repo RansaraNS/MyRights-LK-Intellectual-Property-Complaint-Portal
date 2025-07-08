@@ -10,6 +10,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
 import OTPVerification from './OTPVerification';
 import { validateEmail, validatePhoneNumber } from '../../utils/validation';
 import { ORIGINAL_WORK_TYPES, COPYRIGHT_WORK_TYPES, REPORT_REASONS } from '../../utils/constants';
+import { complaintsAPI } from '../../services/api';
 
 const ComplaintForm = ({ onSubmissionSuccess }) => {
   const [formData, setFormData] = useState({
@@ -29,7 +30,6 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleInputChange = (e) => {
@@ -112,41 +112,21 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
   };
 
   const handleSendOTP = async () => {
-    if (!formData.phoneNumber.trim()) {
-      setErrors({ phoneNumber: 'Phone number is required' });
-      return;
-    }
-
     if (!validatePhoneNumber(formData.phoneNumber)) {
-      setErrors({ phoneNumber: 'Please enter a valid Sri Lankan phone number' });
+      setErrors({ phoneNumber: 'Enter valid Sri Lankan phone number' });
       return;
     }
-
-    setLoading(true);
-    setMessage({ type: '', text: '' });
-
     try {
-      const response = await fetch('/api/complaints/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          phoneNumber: formData.phoneNumber
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setOtpSent(true);
+      setLoading(true);
+      const res = await complaintsAPI.sendOTP(formData.phoneNumber);
+      if (res.success) {
+        setMessage({ type: 'success', text: 'OTP sent!' });
         setShowOTPModal(true);
-        setMessage({ type: 'success', text: 'OTP sent successfully!' });
       } else {
-        setMessage({ type: 'error', text: data.message || 'Failed to send OTP' });
+        setMessage({ type: 'error', text: res.message });
       }
     } catch (err) {
-      setMessage({ type: 'error', text: 'Failed to send OTP. Please try again.' });
+      setMessage({ type: 'error', text: err.message });
     } finally {
       setLoading(false);
     }
@@ -160,36 +140,20 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    setLoading(true);
-    setMessage({ type: '', text: '' });
-
+    if (!validateForm()) return;
     try {
-      const response = await fetch('/api/complaints/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          otpCode: 'verified' // Since OTP is already verified
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setMessage({ type: 'success', text: 'Complaint submitted successfully!' });
-        onSubmissionSuccess(data);
+      setLoading(true);
+      const res = await complaintsAPI.submitComplaint(formData);
+      if (res.success) {
+        setMessage({ type: 'success', text: 'Submitted!' });
+        if (typeof onSubmissionSuccess === 'function') {
+          onSubmissionSuccess(res);
+        }
       } else {
-        setMessage({ type: 'error', text: data.message || 'Failed to submit complaint' });
+        setMessage({ type: 'error', text: res.message });
       }
     } catch (err) {
-      setMessage({ type: 'error', text: 'Failed to submit complaint. Please try again.' });
+      setMessage({ type: 'error', text: err.message });
     } finally {
       setLoading(false);
     }
