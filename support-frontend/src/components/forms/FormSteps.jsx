@@ -83,3 +83,5 @@ export const FormSteps = ({ steps, currentStep }) => {
     </div>
   );
 };
+
+export default FormSteps;

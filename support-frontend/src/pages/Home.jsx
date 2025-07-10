@@ -30,11 +30,11 @@ const Home = () => {
   ];
 
   const handleComplaintSubmission = () => {
-    navigate('/submit-complaint');
+    navigate('/submit');
   };
 
   const handleTrackComplaint = () => {
-    navigate('/track-complaint');
+    navigate('/track');
   };
 
   return (

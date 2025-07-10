@@ -11,10 +11,10 @@ import ErrorMessage from '../components/common/ErrorMessage';
 
 const ComplaintSubmission = () => {
   const navigate = useNavigate();
-  const { 
-    complaintData, 
-    setPhoneVerified, 
-    setPhoneNumber, 
+  const {
+    complaintData,
+    setPhoneVerified,
+    setPhoneNumber,
     setOtpVerified,
     resetComplaintData,
     error,
@@ -30,7 +30,7 @@ const ComplaintSubmission = () => {
     // Reset complaint data when component mounts
     resetComplaintData();
     clearMessages();
-  }, []);
+  }, [resetComplaintData, clearMessages]); // Added dependencies to useEffect
 
   const steps = [
     { number: 1, title: 'Personal Information', description: 'Enter your basic details' },
@@ -52,9 +52,11 @@ const ComplaintSubmission = () => {
     setCurrentStep(3);
   };
 
+  // --- FIX ---
+  // This function should set the current step to 5 to show the success screen.
   const handleComplaintSubmitted = (result) => {
     setSubmissionResult(result);
-    setCurrentStep(4);
+    setCurrentStep(5); // Changed from 4 to 5
   };
 
   const handleBackToHome = () => {
@@ -84,7 +86,7 @@ const ComplaintSubmission = () => {
         );
       case 5:
         return (
-          <Card className="p-8 max-w-2xl mx-auto text-center bg-gradient-to-br from-white/95 to-green-50/95 backdrop-blur-lg shadow-2xl border-0 rounded-2xl relative overflow-hidden">
+          <Card className="p-8 max-w-3xl mx-auto text-center bg-gradient-to-br from-white/95 to-green-50/95 backdrop-blur-lg shadow-2xl border-0 rounded-2xl relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-2xl"></div>
             <div className="relative">
               <div className="mb-6">
@@ -116,24 +118,23 @@ const ComplaintSubmission = () => {
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
                 <Button
                   onClick={handleBackToHome}
-                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
+                  className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
                 >
                   Back to Home
                 </Button>
                 <Button
                   onClick={handleSubmitAnother}
-                  variant="outline"
-                  className="border-2 border-gray-400 text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200 px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
+                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-600 hover:to-red-700 text-white px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
                 >
                   Submit Another Complaint
                 </Button>
                 <Button
                   onClick={() => navigate('/track-complaint')}
                   variant="outline"
-                  className="border-2 border-purple-600 text-purple-600 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-white px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
+                  className="border-2 border-purple-600 text-purple-600 hover:bg-gradient-to-r hover:from-purple-600 hover:to-pink-600 hover:text-red px-6 py-3 rounded-xl font-medium shadow-lg transform hover:-translate-y-1 hover:scale-105 transition-all duration-300"
                 >
                   Track This Complaint
                 </Button>
@@ -167,7 +168,9 @@ const ComplaintSubmission = () => {
         </div>
 
         {/* Progress Steps */}
-        {currentStep < 4 && (
+        {/* --- FIX --- */}
+        {/* Changed condition to show steps until the final success screen */}
+        {currentStep < 5 && (
           <div className="mb-8">
             <FormSteps steps={steps} currentStep={currentStep} />
           </div>

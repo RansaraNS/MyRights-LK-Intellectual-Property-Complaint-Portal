@@ -168,7 +168,7 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
         resetForm();
 
         if (typeof onSubmissionSuccess === 'function') {
-          onSubmissionSuccess(res);
+          onSubmissionSuccess(res.data);
         }
       } else {
         setMessage({ type: 'error', text: res.message });
