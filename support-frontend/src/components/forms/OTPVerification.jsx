@@ -149,7 +149,7 @@ const OTPVerification = ({ phoneNumber, onVerificationSuccess, onCancel }) => {
             </Button>
             <Button
               type="submit"
-              className="flex-1"
+              className="flex-1 bg-gradient-to-r from-red-500 to-red-800 text-white px-6 py-3 rounded-lg shadow-md hover:brightness-110 transition duration-300"
               disabled={loading || otp.length !== 6}
             >
               {loading ? <LoadingSpinner size="sm" /> : 'Verify OTP'}

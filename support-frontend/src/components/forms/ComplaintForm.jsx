@@ -218,12 +218,12 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
                       type="button"
                       onClick={handleSendOTP}
                       disabled={loading || !formData.phoneNumber}
-                      className="h-12"
+                      className="h-13 bg-gradient-to-r from-red-500 to-red-800"
                     >
                       {loading ? <LoadingSpinner size="sm" /> : 'Verify Phone'}
                     </Button>
                   ) : (
-                    <div className="flex items-center h-12 px-4 bg-green-100 text-green-800 rounded-lg">
+                    <div className="flex items-center h-13 px-5 bg-green-200 text-green-800 rounded-lg">
                       <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
@@ -365,7 +365,7 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
           <div className="pt-6 border-t">
             <Button
               type="submit"
-              className="w-full md:w-auto px-8 py-3 text-lg"
+              className="w-full md:w-2xl px-8 py-3 text-lg bg-gradient-to-r from-red-500 to-red-700"
               disabled={loading || !phoneVerified}
             >
               {loading ? <LoadingSpinner size="sm" /> : 'Submit Complaint'}
