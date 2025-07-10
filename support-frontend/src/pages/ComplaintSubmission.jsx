@@ -78,7 +78,7 @@ const ComplaintSubmission = () => {
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
             onPhoneVerificationRequest={handlePhoneVerificationRequest}
-            onComplaintSubmitted={handleComplaintSubmitted}
+            onSubmissionSuccess={handleComplaintSubmitted}
             phoneVerified={complaintData.phoneVerified}
           />
         );

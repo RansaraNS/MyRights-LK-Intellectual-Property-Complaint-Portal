@@ -39,7 +39,6 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
       [name]: value
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -51,10 +50,9 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
   const handleCopyrightWorkTypeChange = (e) => {
     const value = e.target.value;
     const checked = e.target.checked;
-    
     setFormData(prev => ({
       ...prev,
-      copyrightWorkTypes: checked 
+      copyrightWorkTypes: checked
         ? [...prev.copyrightWorkTypes, value]
         : prev.copyrightWorkTypes.filter(type => type !== value)
     }));
@@ -138,6 +136,25 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
     setMessage({ type: 'success', text: 'Phone number verified successfully!' });
   };
 
+  const resetForm = () => {
+    setFormData({
+      fullName: '',
+      email: '',
+      phoneNumber: '',
+      address: '',
+      originalWorkTypes: '',
+      originalWorkUrl: '',
+      copyrightWorkTypes: [],
+      copyrightWorkUrl: '',
+      reportReason: '',
+      description: ''
+    });
+    setErrors({});
+    setPhoneVerified(false);
+    setShowOTPModal(false);
+    setMessage({ type: '', text: '' });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -146,6 +163,10 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
       const res = await complaintsAPI.submitComplaint(formData);
       if (res.success) {
         setMessage({ type: 'success', text: 'Submitted!' });
+
+        // ✅ Reset form on success
+        resetForm();
+
         if (typeof onSubmissionSuccess === 'function') {
           onSubmissionSuccess(res);
         }
@@ -172,54 +193,19 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Personal Information */}
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">
-              Personal Information
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Input
-                  label="Full Name *"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  error={errors.fullName}
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div>
-                <Input
-                  label="Email Address *"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  error={errors.email}
-                  placeholder="Enter your email address"
-                />
-              </div>
+              <Input label="Full Name *" name="fullName" value={formData.fullName} onChange={handleInputChange} error={errors.fullName} placeholder="Enter your full name" />
+              <Input label="Email Address *" name="email" type="email" value={formData.email} onChange={handleInputChange} error={errors.email} placeholder="Enter your email address" />
             </div>
-            
             <div className="mt-6">
               <div className="flex items-end gap-4">
                 <div className="flex-1">
-                  <Input
-                    label="Phone Number *"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    error={errors.phoneNumber}
-                    placeholder="07XXXXXXXX or 94XXXXXXXXX"
-                    disabled={phoneVerified}
-                  />
+                  <Input label="Phone Number *" name="phoneNumber" value={formData.phoneNumber} onChange={handleInputChange} error={errors.phoneNumber} placeholder="07XXXXXXXX or 94XXXXXXXXX" disabled={phoneVerified} />
                 </div>
                 <div className="flex-shrink-0">
                   {!phoneVerified ? (
-                    <Button
-                      type="button"
-                      onClick={handleSendOTP}
-                      disabled={loading || !formData.phoneNumber}
-                      className="h-13 bg-gradient-to-r from-red-500 to-red-800"
-                    >
+                    <Button type="button" onClick={handleSendOTP} disabled={loading || !formData.phoneNumber} className="h-13 bg-gradient-to-r from-red-500 to-red-800">
                       {loading ? <LoadingSpinner size="sm" /> : 'Verify Phone'}
                     </Button>
                   ) : (
@@ -232,149 +218,66 @@ const ComplaintForm = ({ onSubmissionSuccess }) => {
                   )}
                 </div>
               </div>
-              {errors.phoneVerified && (
-                <p className="text-red-600 text-sm mt-1">{errors.phoneVerified}</p>
-              )}
+              {errors.phoneVerified && <p className="text-red-600 text-sm mt-1">{errors.phoneVerified}</p>}
             </div>
-
             <div className="mt-6">
-              <TextArea
-                label="Address *"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                error={errors.address}
-                placeholder="Enter your full address"
-                rows={3}
-              />
+              <TextArea label="Address *" name="address" value={formData.address} onChange={handleInputChange} error={errors.address} placeholder="Enter your full address" rows={3} />
             </div>
           </div>
 
           {/* Original Work Information */}
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">
-              Original Work Information
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">Original Work Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Select
-                  label="Original Work Type *"
-                  name="originalWorkTypes"
-                  value={formData.originalWorkTypes}
-                  onChange={handleInputChange}
-                  error={errors.originalWorkTypes}
-                  options={ORIGINAL_WORK_TYPES}
-                />
-              </div>
-              <div>
-                <TextArea
-                  label="Original Work URL *"
-                  name="originalWorkUrl"
-                  value={formData.originalWorkUrl}
-                  onChange={handleInputChange}
-                  error={errors.originalWorkUrl}
-                  placeholder="https://example.com/original-work"
-                />
-              </div>
+              <Select label="Original Work Type *" name="originalWorkTypes" value={formData.originalWorkTypes} onChange={handleInputChange} error={errors.originalWorkTypes} options={ORIGINAL_WORK_TYPES} />
+              <TextArea label="Original Work URL *" name="originalWorkUrl" value={formData.originalWorkUrl} onChange={handleInputChange} error={errors.originalWorkUrl} placeholder="https://example.com/original-work" />
             </div>
           </div>
 
-          {/* Copyright Work Information */}
+          {/* Copyright */}
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">
-              Copyright Work Information
-            </h3>
-            
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">Copyright Work Information</h3>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Copyright Work Types * (Select all that apply)
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Copyright Work Types *</label>
               <div className="space-y-2">
                 {COPYRIGHT_WORK_TYPES.map(type => (
                   <label key={type.value} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      value={type.value}
-                      checked={formData.copyrightWorkTypes.includes(type.value)}
-                      onChange={handleCopyrightWorkTypeChange}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
+                    <input type="checkbox" value={type.value} checked={formData.copyrightWorkTypes.includes(type.value)} onChange={handleCopyrightWorkTypeChange} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                     <span className="ml-2 text-sm text-gray-700">{type.label}</span>
                   </label>
                 ))}
               </div>
-              {errors.copyrightWorkTypes && (
-                <p className="text-red-600 text-sm mt-1">{errors.copyrightWorkTypes}</p>
-              )}
+              {errors.copyrightWorkTypes && <p className="text-red-600 text-sm mt-1">{errors.copyrightWorkTypes}</p>}
             </div>
-
-            <div>
-              <TextArea
-                label="Copyright Work URL *"
-                name="copyrightWorkUrl"
-                value={formData.copyrightWorkUrl}
-                onChange={handleInputChange}
-                error={errors.copyrightWorkUrl}
-                placeholder="https://example.com/copyright-work"
-              />
-            </div>
+            <TextArea label="Copyright Work URL *" name="copyrightWorkUrl" value={formData.copyrightWorkUrl} onChange={handleInputChange} error={errors.copyrightWorkUrl} placeholder="https://example.com/copyright-work" />
           </div>
 
-          {/* Report Information */}
+          {/* Report */}
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">
-              Report Information
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b">Report Information</h3>
             <div className="space-y-6">
-              <div>
-                <Select
-                  label="Report Reason *"
-                  name="reportReason"
-                  value={formData.reportReason}
-                  onChange={handleInputChange}
-                  error={errors.reportReason}
-                  options={REPORT_REASONS}
-                />
-              </div>
-              <div>
-                <TextArea
-                  label="Additional Description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  error={errors.description}
-                  placeholder="Provide any additional details about your complaint (optional)"
-                  rows={4}
-                />
-              </div>
+              <Select label="Report Reason *" name="reportReason" value={formData.reportReason} onChange={handleInputChange} error={errors.reportReason} options={REPORT_REASONS} />
+              <TextArea label="Additional Description" name="description" value={formData.description} onChange={handleInputChange} error={errors.description} placeholder="Provide any additional details about your complaint (optional)" rows={4} />
             </div>
           </div>
 
           {/* Messages */}
           {message.text && (
             <div className="mt-4">
-              {message.type === 'error' ? (
-                <ErrorMessage message={message.text} />
-              ) : (
-                <SuccessMessage message={message.text} />
-              )}
+              {message.type === 'error' ? <ErrorMessage message={message.text} /> : <SuccessMessage message={message.text} />}
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="pt-6 border-t">
-            <Button
-              type="submit"
-              className="w-full md:w-2xl px-8 py-3 text-lg bg-gradient-to-r from-red-500 to-red-700"
-              disabled={loading || !phoneVerified}
-            >
+            <Button type="submit" className="w-full md:w-2xl px-8 py-3 text-lg bg-gradient-to-r from-red-500 to-red-700" disabled={loading || !phoneVerified}>
               {loading ? <LoadingSpinner size="sm" /> : 'Submit Complaint'}
             </Button>
           </div>
         </form>
       </Card>
 
-      {/* OTP Verification Modal */}
+      {/* OTP Modal */}
       {showOTPModal && (
         <OTPVerification
           phoneNumber={formData.phoneNumber}
