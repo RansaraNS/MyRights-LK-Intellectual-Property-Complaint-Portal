@@ -96,26 +96,7 @@ const ComplaintSubmission = () => {
                   </svg>
                 </div>
                 <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-emerald-800 bg-clip-text text-transparent mb-2">Complaint Submitted Successfully!</h2>
-                <p className="text-gray-600 mb-6 font-medium">Your complaint has been received and will be processed shortly.</p>
-              </div>
-              {submissionResult && (
-                <div className="bg-gradient-to-r from-gray-50/80 to-green-50/80 backdrop-blur-sm rounded-xl p-6 mb-6 shadow-lg border border-green-200/30">
-                  <h3 className="text-lg font-semibold bg-gradient-to-r from-gray-800 to-emerald-800 bg-clip-text text-transparent mb-2">Complaint Details</h3>
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <p><span className="font-medium">Complaint Number:</span> <span className="text-red-600 font-bold">{submissionResult.complaintNumber}</span></p>
-                    <p><span className="font-medium">Complaint ID:</span> <span className="text-purple-600 font-bold">{submissionResult.complaintId}</span></p>
-                    <p><span className="font-medium">Submission Date:</span> {new Date().toLocaleDateString()}</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Please save your complaint number: <span className="font-bold text-red-600 bg-red-50 px-2 py-1 rounded">{submissionResult?.complaintNumber}</span>
-                </p>
-                <p className="text-sm text-gray-600">
-                  You can use this number to track your complaint status.
-                </p>
+                <p className="text-gray-600 mb-6 font-medium">Please check your email for confirmation.</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">

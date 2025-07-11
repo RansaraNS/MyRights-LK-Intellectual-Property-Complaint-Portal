@@ -60,7 +60,11 @@
 			<optional>true</optional>
 		</dependency>
 
-		
+		<!-- Email dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 		
 		<!-- Test dependencies -->
 		<dependency>
