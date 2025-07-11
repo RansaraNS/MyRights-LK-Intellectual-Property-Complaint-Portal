@@ -23,14 +23,14 @@ export const FormSteps = ({ steps, currentStep }) => {
               <div 
                 className={`
                   w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-500 transform relative overflow-hidden
-                  ${isCompleted ? 'bg-gradient-to-br from-[#522546] to-[#2C2C2C] text-white scale-110 shadow-2xl' : ''}
-                  ${isActive ? 'bg-gradient-to-br from-[#F7374F] to-[#88304E] text-white scale-125 shadow-2xl shadow-[#F7374F]/30' : ''}
-                  ${isUpcoming ? 'bg-gradient-to-br from-gray-200 to-gray-300 text-gray-600 shadow-lg' : ''}
+                  ${isCompleted ? 'bg-gradient-to-r from-green-600 to-green-800 text-white scale-110 shadow-2xl' : ''}
+                  ${isActive ? 'bg-gradient-to-br from-red-600 to-red-800 text-white scale-110 shadow-2xl shadow-[#F7374F]/30' : ''}
+                  ${isUpcoming ? 'bg-gradient-to-br from-gray-200 to-pink-300 text-gray-600 shadow-lg' : ''}
                   before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-t before:from-transparent before:to-white/20 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300
                 `}
               >
                 {isCompleted ? (
-                  <svg className="w-8 h-8 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 drop-shadow-lg " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
