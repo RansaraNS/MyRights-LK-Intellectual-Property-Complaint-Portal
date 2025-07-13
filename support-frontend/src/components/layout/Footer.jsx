@@ -34,17 +34,16 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4 bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent">Quick Links</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="/" className="hover:text-red-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Home</a></li>
-              <li><a href="/submit-complaint" className="hover:text-pink-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Submit Complaint</a></li>
-              <li><a href="/track-complaint" className="hover:text-purple-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Track Complaint</a></li>
-              <li><a href="/FAQ" className="hover:text-red-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">FAQ</a></li>
+              <li><a href="/refund-policy" className="hover:text-pink-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Refund Policy</a></li>
+              <li><a href="/privacy-policy" className="hover:text-purple-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Privacy Policy</a></li>
+              <li><a href="/terms-conditions" className="hover:text-red-400 transition-all duration-300 transform hover:translate-x-2 hover:font-semibold inline-block">Terms and Conditions</a></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-lg font-semibold mb-4 bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent">Contact Info</h4>
             <ul className="space-y-2 text-gray-300">
-              <li className="hover:text-red-400 transition-colors duration-300">Email: rp.support@gmail.com</li>
+              <li className="hover:text-red-400 transition-colors duration-300">Email: support@myrightslk.com</li>
               <li className="hover:text-pink-400 transition-colors duration-300">Phone: +94 71 685 3350</li>
               <li className="hover:text-purple-400 transition-colors duration-300">Address: Colombo, Sri Lanka</li>
             </ul>
