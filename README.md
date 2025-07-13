@@ -1,4 +1,4 @@
-# 📞 Customer Support Management System
+# 📞 MyRights-LK-Intellectual-Property-Complaint-Portal
 
 A full-stack, modular Customer Support Management System built with **Spring Boot**, **MySQL**, **React + Vite**, and **Twilio** for real-time SMS support notifications.
 
