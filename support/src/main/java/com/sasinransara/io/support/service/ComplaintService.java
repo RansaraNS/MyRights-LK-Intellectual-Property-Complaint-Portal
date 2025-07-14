@@ -41,9 +41,8 @@ public class ComplaintService {
             // Get current date in YYMMDD format
             String dateFormat = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd"));
             
-            // Find the last complaint number for today
-            String todayPrefix = "FB%" + dateFormat;
-            String lastComplaintNumber = complaintRepository.findLastComplaintNumberByPrefix(todayPrefix);
+            // Find the latest complaint number in DB (regardless of date)
+            String lastComplaintNumber = complaintRepository.findLastComplaintNumber();
             
             int nextSequence = 1000; // Default starting number
             

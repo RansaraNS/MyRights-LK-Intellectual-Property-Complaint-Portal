@@ -11,6 +11,9 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     
     @Query("SELECT c.complaintNumber FROM Complaint c WHERE c.complaintNumber LIKE :prefix ORDER BY c.complaintNumber DESC LIMIT 1")
     String findLastComplaintNumberByPrefix(@Param("prefix") String prefix);
+
+    @Query("SELECT c.complaintNumber FROM Complaint c ORDER BY c.id DESC LIMIT 1")
+    String findLastComplaintNumber();
     
     boolean existsByComplaintNumber(String complaintNumber);
 }
