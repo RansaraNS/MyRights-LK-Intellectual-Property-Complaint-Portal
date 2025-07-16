@@ -1,6 +1,9 @@
 package com.sasinransara.io.support.repository;
 
 import com.sasinransara.io.support.entity.Complaint;
+
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +19,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     String findLastComplaintNumber();
     
     boolean existsByComplaintNumber(String complaintNumber);
+
+    Optional<Complaint> findByComplaintNumber(String complaintNumber);
 }

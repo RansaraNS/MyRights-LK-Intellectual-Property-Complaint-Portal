@@ -126,4 +126,10 @@ public class ComplaintService {
         
         return cleaned;
     }
+
+    public Complaint getComplaintByNumber(String complaintNumber) {
+        return complaintRepository.findByComplaintNumber(complaintNumber)
+                .orElseThrow(() -> new RuntimeException("Complaint not found with number: " + complaintNumber));
+    }
+
 }
