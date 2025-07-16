@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, useCallback } from 'react';
 
 const AppContext = createContext();
 
@@ -87,37 +87,38 @@ const appReducer = (state, action) => {
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  const setLoading = (loading) => {
+  const setLoading = useCallback((loading) => {
     dispatch({ type: actionTypes.SET_LOADING, payload: loading });
-  };
+  }, []);
 
-  const setError = (error) => {
+  const setError = useCallback((error) => {
     dispatch({ type: actionTypes.SET_ERROR, payload: error });
-  };
+  }, []);
 
-  const setSuccess = (success) => {
+  const setSuccess = useCallback((success) => {
     dispatch({ type: actionTypes.SET_SUCCESS, payload: success });
-  };
+  }, []);
 
-  const clearMessages = () => {
+  const clearMessages = useCallback(() => {
     dispatch({ type: actionTypes.CLEAR_MESSAGES });
-  };
+  }, []);
 
-  const setPhoneVerified = (verified) => {
+  const setPhoneVerified = useCallback((verified) => {
     dispatch({ type: actionTypes.SET_PHONE_VERIFIED, payload: verified });
-  };
+  }, []);
 
-  const setPhoneNumber = (phoneNumber) => {
+  const setPhoneNumber = useCallback((phoneNumber) => {
     dispatch({ type: actionTypes.SET_PHONE_NUMBER, payload: phoneNumber });
-  };
+  }, []);
 
-  const setOtpVerified = (verified) => {
+  const setOtpVerified = useCallback((verified) => {
     dispatch({ type: actionTypes.SET_OTP_VERIFIED, payload: verified });
-  };
+  }, []);
 
-  const resetComplaintData = () => {
+  const resetComplaintData = useCallback(() => {
     dispatch({ type: actionTypes.RESET_COMPLAINT_DATA });
-  };
+  }, []);
+
 
   const value = {
     ...state,

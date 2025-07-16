@@ -104,4 +104,7 @@ public class Complaint {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @Column(nullable = false)
+    private String status = "Pending";
 }

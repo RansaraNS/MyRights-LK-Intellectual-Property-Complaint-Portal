@@ -1,13 +1,18 @@
 package com.sasinransara.io.support.controller;
 
+import com.sasinransara.io.support.dto.ComplaintResponse;
 import com.sasinransara.io.support.dto.ComplaintRequest;
 import com.sasinransara.io.support.dto.OTPRequest;
 import com.sasinransara.io.support.dto.OTPVerificationRequest;
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.service.ComplaintService;
+import com.sasinransara.io.support.service.EmailService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +27,9 @@ import java.util.Map;
 public class ComplaintController {
 
     private final ComplaintService complaintService;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/send-otp")
     public ResponseEntity<Map<String, Object>> sendOTP(@Valid @RequestBody OTPRequest request) {
@@ -99,6 +107,9 @@ public class ComplaintController {
             response.put("complaintNumber", savedComplaint.getComplaintNumber());
             response.put("complaintId", savedComplaint.getId());
 
+            // Send confirmation email
+            emailService.sendComplaintConfirmation(complaint.getEmail(), complaint.getComplaintNumber());
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error submitting complaint: ", e);
@@ -109,4 +120,32 @@ public class ComplaintController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @GetMapping("/track")
+    public ResponseEntity<Map<String, Object>> trackComplaint(@RequestParam String complaintNumber) {
+        try {
+            Complaint complaint = complaintService.getComplaintByNumber(complaintNumber);
+
+            ComplaintResponse responseDto = new ComplaintResponse();
+            responseDto.setComplaintNumber(complaint.getComplaintNumber());
+            responseDto.setFullName(complaint.getFullName());
+            responseDto.setEmail(complaint.getEmail());
+            responseDto.setPhoneNumber(complaint.getPhoneNumber());
+            responseDto.setStatus(complaint.getStatus());
+            responseDto.setCreatedAt(complaint.getCreatedAt());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", responseDto);
+
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
 }
