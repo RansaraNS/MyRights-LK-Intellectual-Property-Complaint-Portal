@@ -66,6 +66,18 @@ export const complaintsAPI = {
       throw new Error(error.response?.data?.message || 'Failed to submit complaint');
     }
   },
+
+  // Track complaint by complaint number
+  trackComplaint: async (complaintNumber) => {
+    try {
+      const response = await api.get(`/complaints/track`, {
+        params: { complaintNumber }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to track complaint');
+    }
+  }
 };
 
 export default api;

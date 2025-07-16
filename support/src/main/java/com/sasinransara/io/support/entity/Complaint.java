@@ -106,5 +106,5 @@ public class Complaint {
     }
 
     @Column(nullable = false)
-    private String status = "Processing";
+    private String status = "Pending";
 }

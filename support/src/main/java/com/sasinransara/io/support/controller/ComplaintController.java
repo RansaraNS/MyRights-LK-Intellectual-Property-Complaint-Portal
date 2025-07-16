@@ -132,6 +132,7 @@ public class ComplaintController {
             responseDto.setEmail(complaint.getEmail());
             responseDto.setPhoneNumber(complaint.getPhoneNumber());
             responseDto.setStatus(complaint.getStatus());
+            responseDto.setCreatedAt(complaint.getCreatedAt());
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);

@@ -1,5 +1,7 @@
 package com.sasinransara.io.support.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -9,4 +11,5 @@ public class ComplaintResponse {
     private String email;
     private String phoneNumber;
     private String status;
+    private LocalDateTime createdAt;
 }
