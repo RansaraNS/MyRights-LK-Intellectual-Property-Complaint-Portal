@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Select from '../ui/Select';
@@ -18,6 +19,7 @@ const ComplaintForm = ({
   setCurrentStep,
   phoneVerified: externalPhoneVerified
 }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -168,12 +170,10 @@ const ComplaintForm = ({
       setLoading(true);
       const res = await complaintsAPI.submitComplaint(formData);
       if (res.success) {
-        setMessage({ type: 'success', text: 'Submitted!' });
-        resetForm();
-
-        if (typeof onSubmissionSuccess === 'function') {
-          onSubmissionSuccess(res.data);
-        }
+        setMessage({ type: 'success', text: 'Submitted! Redirecting to payment...' });
+        
+        // Redirect to payment page
+        navigate('/payment', { state: { complaintId: res.complaintId } });
       } else {
         setMessage({ type: 'error', text: res.message });
       }

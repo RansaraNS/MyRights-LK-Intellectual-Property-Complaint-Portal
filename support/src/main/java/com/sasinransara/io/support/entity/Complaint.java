@@ -107,4 +107,16 @@ public class Complaint {
 
     @Column(nullable = false)
     private String status = "Pending";
+
+    @Column(name = "payment_status")
+    private String paymentStatus;
+
+    @Column(name = "payment_id")
+    private String paymentId;
+
+    @Column(name = "payment_amount")
+    private Double paymentAmount;
+
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 }

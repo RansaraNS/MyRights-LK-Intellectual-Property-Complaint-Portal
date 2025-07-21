@@ -132,4 +132,32 @@ public class ComplaintService {
                 .orElseThrow(() -> new RuntimeException("Complaint not found with number: " + complaintNumber));
     }
 
+    public Complaint getComplaintById(Long complaintId) {
+        return complaintRepository.findById(complaintId)
+                .orElseThrow(() -> new RuntimeException("Complaint not found with id: " + complaintId));
+    }
+
+    @Transactional
+    public Complaint updateComplaint(Complaint complaint) {
+        try {
+            log.info("Updating complaint: {}", complaint.getId());
+            if (complaint.getId() == null || !complaintRepository.existsById(complaint.getId())) {
+                throw new RuntimeException("Complaint not found or invalid ID");
+            }
+            return complaintRepository.save(complaint);
+        } catch (Exception e) {
+            log.error("Failed to update complaint: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void updatePaymentStatus(String complaintNumber, String paymentStatus, String paymentId, Double paymentAmount) {
+        Complaint complaint = getComplaintByNumber(complaintNumber);
+        complaint.setPaymentStatus(paymentStatus);
+        complaint.setPaymentId(paymentId);
+        complaint.setPaymentAmount(paymentAmount);
+        complaint.setPaymentDate(LocalDateTime.now());
+        complaintRepository.save(complaint);
+    }
 }
