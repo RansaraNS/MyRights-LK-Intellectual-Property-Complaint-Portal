@@ -7,7 +7,7 @@ import com.sasinransara.io.support.dto.OTPRequest;
 import com.sasinransara.io.support.dto.OTPVerificationRequest;
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.service.ComplaintService;
-//import com.sasinransara.io.support.service.EmailService;
+import com.sasinransara.io.support.service.EmailService;
 import com.sasinransara.io.support.service.PaymentService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +33,8 @@ public class ComplaintController {
     private final PaymentService paymentService;
     private final PayHereConfig payHereConfig;
 
-    // @Autowired
-    // private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/send-otp")
     public ResponseEntity<Map<String, Object>> sendOTP(@Valid @RequestBody OTPRequest request) {
@@ -107,26 +107,15 @@ public class ComplaintController {
             // Save complaint
             Complaint savedComplaint = complaintService.createComplaint(complaint);
 
-            // Build notification URLs
-            String baseUrl = httpRequest.getRequestURL().toString().replace(httpRequest.getRequestURI(), "");
-            String notifyUrl = baseUrl + "/api/payment/notify";
-            String returnUrl = baseUrl + "/payment/success?complaintId=" + savedComplaint.getId();
-            String cancelUrl = baseUrl + "/payment/cancel?complaintId=" + savedComplaint.getId();
-
-            // Prepare payment data
-            Map<String, String> paymentData = paymentService.preparePaymentRequest(
-                    savedComplaint.getId(), 
-                    notifyUrl, 
-                    returnUrl, 
-                    cancelUrl
-            );
+            // Send confirmation email
+            emailService.sendComplaintConfirmation(complaint.getEmail(), complaint.getComplaintNumber());
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Complaint submitted successfully. Please complete the payment.");
             response.put("complaintNumber", savedComplaint.getComplaintNumber());
             response.put("complaintId", savedComplaint.getId());
-            response.put("paymentData", paymentData);
+            //response.put("paymentData", paymentData);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
