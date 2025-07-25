@@ -108,8 +108,8 @@ public class Complaint {
     @Column(nullable = false)
     private String status = "Pending";
 
-    @Column(name = "payment_status")
-    private String paymentStatus;
+    @Column(name = "payment_status", nullable = false)
+    private String paymentStatus = "PENDING"; // Default value
 
     @Column(name = "payment_id")
     private String paymentId;

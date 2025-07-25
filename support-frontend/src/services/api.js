@@ -110,6 +110,16 @@ export const complaintsAPI = {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to get payment status');
     }
+  },
+  
+  // Update payment status
+  updatePaymentStatus: async (paymentData) => {
+    try {
+      const response = await api.post('/payment/update-status', paymentData);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to update payment status');
+    }
   }
 };
 

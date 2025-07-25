@@ -66,6 +66,20 @@ const PaymentPage = () => {
     }
   };
 
+  const updatePaymentStatus = async (status, paymentId, amount) => {
+    try {
+      await complaintsAPI.updatePaymentStatus({
+        complaintNumber,
+        paymentStatus: status,
+        paymentId,
+        amount
+      });
+    } catch (err) {
+      console.error("Failed to update payment status:", err);
+      // Even if this fails, we'll still redirect but log the error
+    }
+  };
+
   const handleProceedToPayment = () => {
     if (!paymentData || !window.payhere) {
       setError('Payment initialization failed. Please try again.');
@@ -73,8 +87,12 @@ const PaymentPage = () => {
     }
 
     // Configure PayHere callbacks
-    window.payhere.onCompleted = function(orderId) {
+    window.payhere.onCompleted = async function(orderId, paymentId) {
       console.log("Payment completed. OrderID:" + orderId);
+      
+      // Update payment status via our new API
+      await updatePaymentStatus("PAID", paymentId, "2500.00");
+      
       navigate(`/payment/success?complaintId=${complaintId}`);
     };
 
