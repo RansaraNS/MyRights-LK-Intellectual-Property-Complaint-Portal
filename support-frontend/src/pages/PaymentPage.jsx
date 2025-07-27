@@ -39,8 +39,32 @@ const PaymentPage = () => {
     }
 
     setComplaintId(complaintId);
-    preparePayment(complaintId);
+    checkPaymentStatus(complaintId);
   }, [location]);
+
+  const checkPaymentStatus = async (id) => {
+    try {
+      setLoading(true);
+      const statusResponse = await complaintsAPI.getPaymentStatus(id);
+      
+      if (statusResponse.success) {
+        if (statusResponse.paymentStatus === 'PAID') {
+          // Redirect to already paid page if payment is completed
+          navigate(`/payment/already-paid?complaintId=${id}`);
+          return;
+        }
+        
+        // Only prepare payment if status is not PAID
+        await preparePayment(id);
+      } else {
+        setError(statusResponse.message || 'Failed to check payment status');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const preparePayment = async (id) => {
     try {
