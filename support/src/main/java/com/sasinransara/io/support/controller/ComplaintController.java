@@ -7,7 +7,6 @@ import com.sasinransara.io.support.dto.OTPRequest;
 import com.sasinransara.io.support.dto.OTPVerificationRequest;
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.service.ComplaintService;
-import com.sasinransara.io.support.service.EmailService;
 import com.sasinransara.io.support.service.PaymentService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +30,6 @@ public class ComplaintController {
     private final ComplaintService complaintService;
     private final PaymentService paymentService;
     private final PayHereConfig payHereConfig;
-
-    @Autowired
-    private EmailService emailService;
 
     @PostMapping("/send-otp")
     public ResponseEntity<Map<String, Object>> sendOTP(@Valid @RequestBody OTPRequest request) {
@@ -106,9 +101,6 @@ public class ComplaintController {
 
             // Save complaint
             Complaint savedComplaint = complaintService.createComplaint(complaint);
-
-            // Send confirmation email
-            emailService.sendComplaintConfirmation(complaint.getEmail(), complaint.getComplaintNumber());
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);

@@ -87,7 +87,7 @@ const PaymentSuccessPage = () => {
         <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
           <p className="mb-2"><span className="font-semibold">Complaint Number:</span> {complaint.number}</p>
           <p className="mb-2"><span className="font-semibold">Amount Paid:</span> LKR {complaint.amount.toFixed(2)}</p>
-          <p><span className="font-semibold">Date:</span> {new Date(complaint.date).toLocaleString()}</p>
+          <p><span className="font-semibold">Date & Time:</span> {new Date(complaint.date).toLocaleString()}</p>
         </div>
 
         <p className="mb-6">

@@ -138,33 +138,8 @@ public class ComplaintService {
     }
 
     @Transactional
-    public Complaint updateComplaint(Complaint complaint) {
-        try {
-            log.info("Updating complaint: {}", complaint.getId());
-            if (complaint.getId() == null || !complaintRepository.existsById(complaint.getId())) {
-                throw new RuntimeException("Complaint not found or invalid ID");
-            }
-            return complaintRepository.save(complaint);
-        } catch (Exception e) {
-            log.error("Failed to update complaint: {}", e.getMessage());
-            throw e;
-        }
-    }
-
-    @Transactional
-    public void updatePaymentStatus(String complaintNumber, String paymentStatus, String paymentId, Double paymentAmount) {
-        Complaint complaint = getComplaintByNumber(complaintNumber);
-        complaint.setPaymentStatus(paymentStatus);
-        complaint.setPaymentId(paymentId);
-        complaint.setPaymentAmount(paymentAmount);
-        complaint.setPaymentDate(LocalDateTime.now());
-        complaintRepository.save(complaint);
-    }
-
-    @Transactional
     public void updatePaymentDetails(String complaintNumber, 
                                    String paymentStatus, 
-                                   String paymentId, 
                                    Double paymentAmount, 
                                    LocalDateTime paymentDate) {
         try {
@@ -176,7 +151,6 @@ public class ComplaintService {
 
             // 2. Update all payment fields
             complaint.setPaymentStatus(paymentStatus);
-            complaint.setPaymentId(paymentId);
             complaint.setPaymentAmount(paymentAmount);
             complaint.setPaymentDate(paymentDate);
 

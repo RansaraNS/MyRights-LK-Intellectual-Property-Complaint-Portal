@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.service.ComplaintService;
-//import com.sasinransara.io.support.service.EmailService;
+import com.sasinransara.io.support.service.EmailService;
 import com.sasinransara.io.support.service.PaymentService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,9 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final ComplaintService complaintService;
-    //private final EmailService emailService;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/notify")
     public ResponseEntity<String> handlePaymentNotification(@RequestParam Map<String, String> paymentResponse) {
@@ -45,8 +48,6 @@ public class PaymentController {
 
             String statusCode = paymentResponse.get("status_code");
             String complaintNumber = paymentResponse.get("order_id");
-            // String paymentId = paymentResponse.get("payment_id");
-            // String amount = paymentResponse.get("payhere_amount");
 
             log.info("Payment notification received for complaint: {}, Status: {}", complaintNumber, statusCode);
             
@@ -66,7 +67,6 @@ public class PaymentController {
         try {
             String complaintNumber = request.get("complaintNumber");
             String paymentStatus = request.get("paymentStatus");
-            String paymentId = request.get("paymentId");
             String amount = request.get("amount");
 
             log.info("Updating payment status for complaint: {}", complaintNumber);
@@ -75,10 +75,17 @@ public class PaymentController {
             complaintService.updatePaymentDetails(
                 complaintNumber,
                 paymentStatus,
-                paymentId,
                 Double.parseDouble(amount),
                 LocalDateTime.now()
             );
+
+            Complaint complaint = complaintService.getComplaintByNumber(complaintNumber);
+            if (complaint == null) {
+                throw new RuntimeException("Complaint not found with number: " + complaintNumber);
+            }
+            
+            // Send confirmation email
+            emailService.sendComplaintConfirmation(complaint.getEmail(), complaint.getComplaintNumber());
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -103,7 +110,7 @@ public class PaymentController {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("paymentStatus", complaint.getPaymentStatus());
-            response.put("paymentId", complaint.getPaymentId());
+            response.put("complaintNumber", complaint.getComplaintNumber());
             response.put("paymentAmount", complaint.getPaymentAmount());
             response.put("paymentDate", complaint.getPaymentDate());
             
