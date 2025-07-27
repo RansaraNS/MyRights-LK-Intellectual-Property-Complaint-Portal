@@ -92,6 +92,34 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<!-- Add these dependencies to your pom.xml -->
+
+		<!-- For HTML email support -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<!-- For Thymeleaf templating (optional but recommended) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- If using Jakarta EE (Spring Boot 3.x) -->
+		<dependency>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+		</dependency>
+
+		<!-- If using Java EE (Spring Boot 2.x) -->
+		<!-- 
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+		</dependency>
+		-->
+
 	</dependencies>
 
 	<build>
