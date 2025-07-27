@@ -1,18 +1,19 @@
 package com.sasinransara.io.support.controller;
 
 import com.sasinransara.io.support.dto.ComplaintResponse;
+import com.sasinransara.io.support.config.PayHereConfig;
 import com.sasinransara.io.support.dto.ComplaintRequest;
 import com.sasinransara.io.support.dto.OTPRequest;
 import com.sasinransara.io.support.dto.OTPVerificationRequest;
 import com.sasinransara.io.support.entity.Complaint;
 import com.sasinransara.io.support.service.ComplaintService;
-import com.sasinransara.io.support.service.EmailService;
+import com.sasinransara.io.support.service.PaymentService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +28,8 @@ import java.util.Map;
 public class ComplaintController {
 
     private final ComplaintService complaintService;
-
-    @Autowired
-    private EmailService emailService;
+    private final PaymentService paymentService;
+    private final PayHereConfig payHereConfig;
 
     @PostMapping("/send-otp")
     public ResponseEntity<Map<String, Object>> sendOTP(@Valid @RequestBody OTPRequest request) {
@@ -72,7 +72,8 @@ public class ComplaintController {
 
     @PostMapping("/submit")
     public ResponseEntity<Map<String, Object>> submitComplaint(
-            @Valid @RequestBody ComplaintRequest request) {
+            @Valid @RequestBody ComplaintRequest request,
+            HttpServletRequest httpRequest) {
         try {
             // Verify OTP before submitting complaint
             if (!complaintService.isPhoneVerified(request.getPhoneNumber())) {
@@ -81,7 +82,6 @@ public class ComplaintController {
                 response.put("message", "Phone number not verified. Please verify your phone number before submitting.");
                 return ResponseEntity.badRequest().body(response);
             }
-
 
             // Create complaint from request
             Complaint complaint = new Complaint();
@@ -97,18 +97,17 @@ public class ComplaintController {
             complaint.setDescription(request.getDescription());
             complaint.setPhoneVerified(true);
             complaint.setPhoneVerifiedAt(java.time.LocalDateTime.now());
+            complaint.setPaymentStatus("PENDING"); // New field
 
             // Save complaint
             Complaint savedComplaint = complaintService.createComplaint(complaint);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
-            response.put("message", "Complaint submitted successfully");
+            response.put("message", "Complaint submitted successfully. Please complete the payment.");
             response.put("complaintNumber", savedComplaint.getComplaintNumber());
             response.put("complaintId", savedComplaint.getId());
-
-            // Send confirmation email
-            emailService.sendComplaintConfirmation(complaint.getEmail(), complaint.getComplaintNumber());
+            //response.put("paymentData", paymentData);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -148,4 +147,42 @@ public class ComplaintController {
         }
     }
 
+    @PostMapping("/prepare-payment")
+    public ResponseEntity<Map<String, Object>> preparePayment(
+            @RequestBody Map<String, Object> request,
+            HttpServletRequest httpRequest) {
+        try {
+            Long complaintId = Long.parseLong(request.get("complaintId").toString());
+            
+            // Build URLs
+            String baseUrl = httpRequest.getRequestURL().toString()
+                    .replace(httpRequest.getRequestURI(), "");
+            String notifyUrl = baseUrl + "/api/payment/notify";
+            String returnUrl = baseUrl + "/payment/success?complaintId=" + complaintId;
+            String cancelUrl = baseUrl + "/payment/cancel?complaintId=" + complaintId;
+
+            // Prepare payment data
+            Map<String, String> paymentData = paymentService.preparePaymentRequest(
+                    complaintId, 
+                    notifyUrl, 
+                    returnUrl, 
+                    cancelUrl
+            );
+
+            // Add sandbox flag
+            paymentData.put("sandbox", String.valueOf(payHereConfig.isSandbox()));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("paymentData", paymentData);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error preparing payment", e);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Failed to prepare payment: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

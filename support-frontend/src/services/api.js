@@ -77,6 +77,49 @@ export const complaintsAPI = {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to track complaint');
     }
+  },
+  
+  preparePayment: async (complaintId, notifyUrl, returnUrl, cancelUrl) => {
+    try {
+      const response = await api.post('/complaints/prepare-payment', {
+        complaintId,
+        notifyUrl,
+        returnUrl,
+        cancelUrl
+      });
+      
+      // Ensure the response data is properly formatted
+      if (response.data && response.data.paymentData) {
+        // Convert sandbox string to boolean if needed
+        if (typeof response.data.paymentData.sandbox === 'string') {
+          response.data.paymentData.sandbox = response.data.paymentData.sandbox === 'true';
+        }
+      }
+      
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to prepare payment');
+    }
+  },
+
+  // Check payment status
+  getPaymentStatus: async (complaintId) => {
+    try {
+      const response = await api.get(`/payment/status/${complaintId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to get payment status');
+    }
+  },
+  
+  // Update payment status
+  updatePaymentStatus: async (paymentData) => {
+    try {
+      const response = await api.post('/payment/update-status', paymentData);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to update payment status');
+    }
   }
 };
 

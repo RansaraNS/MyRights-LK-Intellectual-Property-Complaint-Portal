@@ -21,4 +21,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     boolean existsByComplaintNumber(String complaintNumber);
 
     Optional<Complaint> findByComplaintNumber(String complaintNumber);
+
+    Optional<Complaint> findById(Long id);
 }

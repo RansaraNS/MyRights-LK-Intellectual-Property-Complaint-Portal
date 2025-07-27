@@ -132,4 +132,36 @@ public class ComplaintService {
                 .orElseThrow(() -> new RuntimeException("Complaint not found with number: " + complaintNumber));
     }
 
+    public Complaint getComplaintById(Long complaintId) {
+        return complaintRepository.findById(complaintId)
+                .orElseThrow(() -> new RuntimeException("Complaint not found with id: " + complaintId));
+    }
+
+    @Transactional
+    public void updatePaymentDetails(String complaintNumber, 
+                                   String paymentStatus, 
+                                   Double paymentAmount, 
+                                   LocalDateTime paymentDate) {
+        try {
+            log.info("Updating payment details for complaint: {}", complaintNumber);
+            
+            // 1. Find the complaint
+            Complaint complaint = complaintRepository.findByComplaintNumber(complaintNumber)
+                .orElseThrow(() -> new RuntimeException("Complaint not found: " + complaintNumber));
+
+            // 2. Update all payment fields
+            complaint.setPaymentStatus(paymentStatus);
+            complaint.setPaymentAmount(paymentAmount);
+            complaint.setPaymentDate(paymentDate);
+
+            // 3. Save the changes
+            complaintRepository.save(complaint);
+            
+            log.debug("Successfully updated payment details for complaint: {}", complaintNumber);
+            
+        } catch (Exception e) {
+            log.error("Failed to update payment details for complaint: {}", complaintNumber, e);
+            throw new RuntimeException("Failed to update payment details", e);
+        }
+    }
 }
