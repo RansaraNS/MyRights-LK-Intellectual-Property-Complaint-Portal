@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Confirmation</title>
+    <style>
+        /* Reset styles for email compatibility */
+        body, table, td, p, h1, h2, h3 {
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Email-safe CSS */
+        .email-container {
+            width: 100% !important;
+            background-color: #f8fafc;
+            font-family: Arial, sans-serif;
+        }
+        
+        .main-table {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+        }
+        
+        .header-gradient {
+            background-color: #dc2626;
+            background-image: linear-gradient(135deg, #dc2626 0%, #db2777 50%, #9333ea 100%);
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin: 0 auto 20px auto;
+            text-align: center;
+            line-height: 80px;
+        }
+        
+        .payment-box {
+            background-color: #ecfdf5;
+            border-radius: 8px;
+            padding: 24px;
+            border-left: 4px solid #10b981;
+            margin-bottom: 20px;
+        }
+        
+        .complaint-box {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            padding: 24px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .complaint-number {
+            background-color: #db2777;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-block;
+        }
+        
+        .track-button {
+            background-color: #dc2626;
+            background-image: linear-gradient(135deg, #dc2626 0%, #db2777 50%, #9333ea 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+        }
+        
+        .step-number {
+            background-color: #9333ea;
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 12px;
+            vertical-align: top;
+        }
+        
+        .footer-bg {
+            background-color: #374151;
+            padding: 20px 30px;
+            text-align: center;
+            border-radius: 0 0 12px 12px;
+        }
+        
+        /* Responsive adjustments */
+        @media only screen and (max-width: 600px) {
+            .main-table {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .header-gradient, .footer-bg {
+                padding: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc; padding: 40px 20px;">
+            <tr>
+                <td align="center">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="main-table" style="box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                        <!-- Header -->
+                        <tr>
+                            <td class="header-gradient">
+                                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;" th:text="${appName}">MyRights LK</h1>
+                                <p style="color: #e2e8f0; margin: 8px 0 0 0; font-size: 16px;">Sri Lanka's #1 &amp; Only IP Protection Platform</p>
+                            </td>
+                        </tr>
+                        
+                        <!-- Success Icon -->
+                        <tr>
+                            <td style="padding: 30px; text-align: center;">
+                                <div class="success-icon">
+                                    <span style="color: white; font-size: 36px;">✓</span>
+                                </div>
+                                <h2 style="color: #1f2937; margin: 0 0 16px 0; font-size: 24px; font-weight: bold;">Payment Successful &amp; Complaint Submitted!</h2>
+                                <p style="color: #6b7280; margin: 0; font-size: 16px; line-height: 1.6;">Thank you for your payment and for reaching out to us. We've received your complaint and our team will review it promptly.</p>
+                            </td>
+                        </tr>
+                        
+                        <!-- Payment & Complaint Details -->
+                        <tr>
+                            <td style="padding: 0 30px 20px;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td>
+                                            <div class="payment-box">
+                                                <h3 style="color: #065f46; margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">💳 Payment Confirmed</h3>
+                                                <p style="color: #047857; margin: 0; font-size: 14px;">Your payment has been processed successfully. You can now track your complaint progress.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="complaint-box">
+                                                <h3 style="color: #374151; margin: 0 0 12px 0; font-size: 18px; font-weight: bold;">📋 Your Complaint Details</h3>
+                                                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                                    <tr>
+                                                        <td style="color: #6b7280; font-weight: bold; padding-bottom: 8px;">Complaint Number:</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <span class="complaint-number" th:text="${complaintNumber}">REF123456</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <p style="color: #dc2626; margin: 16px 0 0 0; font-weight: bold; font-size: 14px;">*Please save this number for your records. You can use it to track your complaint status anytime.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        
+                        <!-- Track Button -->
+                        <tr>
+                            <td style="padding: 0 30px 40px; text-align: center;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td align="center">
+                                            <a th:href="${trackingUrl}" class="track-button">
+                                                🔍 Track Your Complaint
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" style="padding-top: 16px;">
+                                            <p style="color: #9ca3af; margin: 0; font-size: 11px;">
+                                                Or copy this link:<br><br>
+                                                <span style="background-color: #f3f4f6; padding: 8px; border-radius: 4px; font-family: monospace; word-break: break-all; font-size: 10px;" th:text="${trackingUrl}">https://example.com/track/REF123456</span>
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        
+                        <!-- Next Steps -->
+                        <tr>
+                            <td style="padding: 0 30px 30px;">
+                                <h3 style="color: #374151; margin: 0 0 16px 0; font-size: 18px; font-weight: bold;">What Happens Next?</h3>
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding-bottom: 12px;">
+                                            <span class="step-number">1</span>
+                                            <span style="color: #6b7280; font-size: 14px;">Our team will review your complaint within 24-48 hours</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-bottom: 12px;">
+                                            <span class="step-number">2</span>
+                                            <span style="color: #6b7280; font-size: 14px;">You'll receive email updates as we progress on your case</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="step-number">3</span>
+                                            <span style="color: #6b7280; font-size: 14px;">Use the tracking link above to check status anytime</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        
+                        <!-- Contact Info -->
+                        <tr>
+                            <td style="background-color: #f8fafc; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+                                <p style="color: #000000; margin: 0 0 8px 0; font-size: 14px;">Need immediate assistance?</p>
+                                <p style="color: #374151; margin: 0; font-weight: bold;">
+                                    📧 <a th:href="'mailto:' + ${supportEmail}" style="color: #db2222; text-decoration: none;" th:text="${supportEmail}">support@myrights.lk</a>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <!-- Footer -->
+                        <tr>
+                            <td class="footer-bg">
+                                <p style="color: #9ca3af; margin: 0; font-size: 12px;">
+                                    © <span th:text="${year}">2025</span> <span th:text="${appName}">MyRights LK</span>. All rights reserved.<br>
+                                    This is an automated message, please do not reply directly to this email.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
